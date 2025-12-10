@@ -8,12 +8,12 @@ client = genai.Client(http_options=HttpOptions(api_version="v1"), api_key=config
 model_id = "gemini-2.5-flash"
 
 
-async def generate_text():
+async def get_answer_from_gemini(prompt: str):
     response = await client.aio.models.generate_content(
             model=model_id,
-            contents="Привет, напиши, какой сегодня день",
+            contents=prompt,
         )
 
     return response.text if response else None
 
-print(asyncio.run(generate_text()))
+
