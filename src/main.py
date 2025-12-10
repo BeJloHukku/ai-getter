@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Body
 
-from gemini_client import get_answer_from_gemini
+from src.gemini_client import get_answer_from_gemini
 
 app = FastAPI()
 
