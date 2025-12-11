@@ -3,7 +3,7 @@ from google.genai.types import GenerateContentConfig, HttpOptions
 import asyncio
 
 from config import config_obj
-from exeptions import AiGeminiError, NoResponseWasGivenFromGeminiError
+from src.exeptions import AiGeminiError, NoResponseWasGivenFromGeminiError
 
 client = genai.Client(http_options=HttpOptions(api_version="v1"), api_key=config_obj.gemini_api_key)
 model_id = "gemini-2.5-flash"

@@ -2,7 +2,7 @@ from typing import Annotated, AsyncGenerator
 from fastapi import FastAPI, Body, Request, Depends, HTTPException, status
 from contextlib import asynccontextmanager
 
-from exeptions import AiGeminiError, NoResponseWasGivenFromGeminiError
+from src.exeptions import AiGeminiError, NoResponseWasGivenFromGeminiError
 from src.database.crud import add_request_data, get_user_requests
 from src.database.db import engine
 from src.database.models import Base
