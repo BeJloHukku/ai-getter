@@ -1,7 +1,8 @@
 from typing import Annotated, AsyncGenerator
-from fastapi import FastAPI, Body, Request, Depends
+from fastapi import FastAPI, Body, Request, Depends, HTTPException, status
 from contextlib import asynccontextmanager
 
+from exeptions import AiGeminiError, NoResponseWasGivenFromGeminiError
 from src.database.crud import add_request_data, get_user_requests
 from src.database.db import engine
 from src.database.models import Base
@@ -46,6 +47,18 @@ async def send_prompt(
         session: Annotated[AsyncSession, Depends(get_session)]
 ):
     ip_address = request.client.host
-    response = await get_answer_from_gemini(prompt)
+    try:
+        response = await get_answer_from_gemini(prompt)
+    except NoResponseWasGivenFromGeminiError:
+        raise HTTPException(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            detail="Ошибка генерирования ответа! Попробуйте еще раз!",
+        )
+    except AiGeminiError:
+        raise HTTPException (
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Сервис Gemini не доступен, попробуйте позже!",
+        )
+
     await add_request_data(ip_address, prompt, response, session)
     return {"data": response}
